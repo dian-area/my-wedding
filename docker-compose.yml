@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: siiteung
+        uid: 1002
+      context: ./
+      dockerfile: Dockerfile
+    image: kabayan-id
+    container_name: kabayan-id-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - siiteung
+
+  nginx:
+    image: nginx:alpine
+    container_name: kabayan-id-nginx
+    restart: unless-stopped
+    ports:
+      - 0.0.0.0:7711:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - siiteung
+
+networks:
+  siiteung:
+    driver: bridge
